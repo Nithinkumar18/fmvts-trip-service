@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/Nithinkumar18/Fleet-Management-And-Vehicle-Tracking-System/issues"
   },
-  "homepage": "https://github.com/Nithinkumar18/Fleet-Management-And-Vehicle-Tracking-System#readme"
+  "homepage": "https://github.com/Nithinkumar18/Fleet-Management-And-Vehicle-Tracking-System#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "winston": "^3.17.0"
+  }
 }
