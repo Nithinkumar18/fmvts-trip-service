@@ -32,11 +32,16 @@ const tripSchema = new mongoose.Schema({
     },
 
     plannedStartTime:{
-        type: Date
+        type: Date,
+        required: true
     },
 
     startTime:{
         type: Date
+    },
+   
+    plannedArrivalTime:{
+        type:Date,
     },
 
     arrivalTime:{
