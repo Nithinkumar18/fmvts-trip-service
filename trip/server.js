@@ -4,7 +4,10 @@ const express = require('express');
 const app = express();
 const logger = require('./src/loggers/logger');
 const logMsg = require('./src/constants/responseInfo');
+const tripRoutes = require('./src/routes/tripRoutes');
+
 app.use(express.json());
+app.use('/v1/trip',tripRoutes);
 const PORT = process.env.PORT;
 
 mongoose.connect(process.env.MONGODB_URL)
