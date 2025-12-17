@@ -3,6 +3,7 @@ const logger = require("../loggers/logger");
 const tripResInfo = require("../constants/responseInfo");
 const axios = require('axios');
 const {sendDriverActivityDetails} = require('../events/publishDriverActivityDetails');
+const {syncTripToAssignedVehicle} = require('../events/publishTripDetailsToVehicle')
 require('dotenv').config();
 
 
@@ -102,13 +103,17 @@ const updateTripStatus = async(Id,updateStatus) => {
                  logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DELAY_CONFIRMED} : ${timeDifference}`); 
                 await sendDriverActivityDetails(delyInfo.updatedTripDetails.driverId,tripResInfo.DRIVER_ACTIVE_STATUS);
                 logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DRIVER_ACTIVITY_DETAILS_SENT_TO_QUEUE}`); 
+                await syncTripToAssignedVehicle(delyInfo.updatedTripDetails.vehicleId,delyInfo.updatedTripDetails.distance);
+                logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.TRIP_INFO_EVENT}`);
                  return delyInfo;
                     
                }
                else{
                     logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DELAY_NTCNF}`); 
-                    await sendDriverActivityDetails(delyInfo.updatedTripDetails.driverId,tripResInfo.DRIVER_ACTIVE_STATUS);
-                    logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DRIVER_ACTIVITY_DETAILS_SENT_TO_QUEUE}`); 
+                    await sendDriverActivityDetails(arrvupd.driverId,tripResInfo.DRIVER_ACTIVE_STATUS);
+                    logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DRIVER_ACTIVITY_DETAILS_SENT_TO_QUEUE}`);
+                    await syncTripToAssignedVehicle(arrvupd.vehicleId,arrvupd.distance);
+                    logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.TRIP_INFO_EVENT}`); 
                     return arrvupd;
                }
 
@@ -133,11 +138,50 @@ const viewTrip = async() => {
      }
 }
 
+const tripReports = async() => {
+     let totalTps = 0;
+     try{
+         let tripReport ={
+           completedTrips: 0,
+           cancelledTrips: 0,
+           inProgressTrips: 0,
+         }
+          const reports = await trip.aggregate([{
+               
+                $group:{
+                    _id:"$status",
+                    Total: {$sum:1}
+                }
+               
+          }]);
+           reports.forEach((reportValue) => {
+               if(reportValue._id == 'cancelled'){
+                    tripReport.cancelledTrips = reportValue.Total || 0;
+                    totalTps = totalTps + reportValue.Total;
+               }
+               else if(reportValue._id == 'completed'){
+                     tripReport.completedTrips = reportValue.Total || 0;
+                     totalTps = totalTps + reportValue.Total;
+               }
+               else{
+                    tripReport.inProgressTrips = reportValue.Total || 0;
+                    totalTps = totalTps + reportValue.Total;
+               }
+           })
+          tripReport.totalTrips = totalTps;
+          return tripReport;
+     }
+     catch(err){
+        throw err;
+     }
+}
+
 module.exports = {
      startTrip,
      updateTrip,
      retireTrip,
      updateTripStatus,
-     viewTrip
+     viewTrip,
+     tripReports
 
 }
