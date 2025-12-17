@@ -36,7 +36,9 @@
     DRIVER_MSG_QUEUE: "Publish-Driver-Activity-Details",
     DRIVER_ACTIVITY_DETAILS_SENT_TO_QUEUE: "Driver Activity Details has been sent to queue for further action",
     DRIVER_BUSY_STATUS: "busy",
-    DRIVER_ACTIVE_STATUS: "active"
+    DRIVER_ACTIVE_STATUS: "active",
+    DRIVER_TRIP_QUEUE: "Publish-Completed-Trip-Details",
+    TRIP_INFO_EVENT:"Trip details has been sent to vehicle service to update details"
   
   }
 
