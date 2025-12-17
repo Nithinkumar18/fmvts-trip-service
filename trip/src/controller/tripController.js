@@ -105,11 +105,22 @@ const tripStatusUp = async(req,res) => {
     }
 }
 
+const reports = async(req,res) => {
+   try{
+      const myReports = await tripService.tripReports();
+      return res.status(statusCons.SUCCESS).json({TripData:myReports});
+   }
+   catch(err){
+     return res.status(statusCons.INTERNAL_SERVER_ERROR).json({err});
+   }
+}
+
 module.exports = {
     initiateTrip,
     viewTrips,
     updateTripDetails,
     deleteTrip,
-    tripStatusUp
+    tripStatusUp,
+    reports
 
 }
