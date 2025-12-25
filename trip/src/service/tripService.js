@@ -121,7 +121,6 @@ const updateTripStatus = async(Id,updateStatus) => {
 
      }
      catch(err){
-          console.log(err);
          throw err;
      }
 }

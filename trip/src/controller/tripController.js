@@ -80,7 +80,6 @@ const deleteTrip = async(req,res) => {
        }
     }
     catch(err){
-      console.log(err);
         errMessage = err.message;
         return res.status(statusCons.INTERNAL_SERVER_ERROR).json({errMessage});
     }
