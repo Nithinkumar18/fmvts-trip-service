@@ -38,7 +38,11 @@
     DRIVER_BUSY_STATUS: "busy",
     DRIVER_ACTIVE_STATUS: "active",
     DRIVER_TRIP_QUEUE: "Publish-Completed-Trip-Details",
-    TRIP_INFO_EVENT:"Trip details has been sent to vehicle service to update details"
+    TRIP_INFO_EVENT:"Trip details has been sent to vehicle service to update details",
+    EVENT_TYPE: "TRIP_DELAYED",
+    DELAY_NOTIFY_EVENT: "Delay trip data has been sent for publisher",
+    DELAY_DATA_PUBLISH: "Delayed trip data been published to queue successfully"
+    
   
   }
 

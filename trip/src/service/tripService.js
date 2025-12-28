@@ -3,7 +3,8 @@ const logger = require("../loggers/logger");
 const tripResInfo = require("../constants/responseInfo");
 const axios = require('axios');
 const {sendDriverActivityDetails} = require('../events/publishDriverActivityDetails');
-const {syncTripToAssignedVehicle} = require('../events/publishTripDetailsToVehicle')
+const {syncTripToAssignedVehicle} = require('../events/publishTripDetailsToVehicle');
+const {sendDelayedTripData} = require('../events/publishDelayedTripData');
 require('dotenv').config();
 
 
@@ -105,7 +106,9 @@ const updateTripStatus = async(Id,updateStatus) => {
                 logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DRIVER_ACTIVITY_DETAILS_SENT_TO_QUEUE}`); 
                 await syncTripToAssignedVehicle(delyInfo.updatedTripDetails.vehicleId,delyInfo.updatedTripDetails.distance);
                 logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.TRIP_INFO_EVENT}`);
-                 return delyInfo;
+                await sendDelayedTripData(delyInfo);
+                logger.info(`SERVICE - ${tripResInfo.SERVICE} : ${tripResInfo.DELAY_NOTIFY_EVENT}`)
+                return delyInfo;
                     
                }
                else{
